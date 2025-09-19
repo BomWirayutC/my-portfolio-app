@@ -1,15 +1,14 @@
 'use client'
 
 import { useEffect, useState } from "react";
-// import { Button } from "@/components/ui/button";
-// import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-// import { Badge } from "@/components/ui/badge";
-// import { Progress } from "@/components/ui/progress";
-// import { Skeleton } from "@/components/ui/skeleton";
-// import Navigation from "@/components/Navigation";
-// import ProjectCard from "@/components/ProjectCard";
-// import { CertificateModal } from "@/components/CertificateModal";
-// import heroImage from "@/assets/hero-workspace.jpg";
+import { Button } from "../components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import { Badge } from "../components/ui/badge";
+import { Progress } from "../components/ui/progress";
+import { Skeleton } from "../components/ui/skeleton";
+import Navigation from "../components/Navigation";
+import ProjectCard from "../components/ProjectCard";
+import { CertificateModal } from "../components/CertificateModal";
 import { Mail, Github, Linkedin, Download, Code, Palette, Database, Smartphone, Award } from "lucide-react";
 
 interface Project {
@@ -157,15 +156,15 @@ const Portfolio = () => {
 
     return (
         <div className="min-h-screen bg-background">
-            {/* <Navigation /> */}
+            <Navigation />
 
             {/* Hero Section */}
             <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-                {/* <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${aboutMe?.cover_image || heroImage})` }}
-        /> */}
-                <div className="absolute inset-0 bg-black" />
+                <div
+                    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                    style={{ backgroundImage: `url(${aboutMe?.cover_image || "/hero-workspace.jpg"})` }}
+                />
+                {/* <div className="absolute inset-0 bg-black" /> */}
                 <div className="relative z-10 text-center text-white px-6 animate-fade-in">
                     <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-slide-up">
                         {aboutMe?.name || "Alex Johnson"}
@@ -174,22 +173,22 @@ const Portfolio = () => {
                         {aboutMe?.description || "Full Stack Developer & UI/UX Designer"}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up" style={{ animationDelay: "0.4s" }}>
-                        {/* {aboutMe?.email && (
-              <Button size="lg" className="gradient-primary shadow-glow" asChild>
-                <a href={`mailto:${aboutMe.email}`}>
-                  <Mail className="w-5 h-5 mr-2" />
-                  Get In Touch
-                </a>
-              </Button>
-            )} */}
-                        {/* {aboutMe?.resume_url && (
-              <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
-                <a href={aboutMe.resume_url} target="_blank" rel="noopener noreferrer">
-                  <Download className="w-5 h-5 mr-2" />
-                  Download CV
-                </a>
-              </Button>
-            )} */}
+                        {aboutMe?.email && (
+                            <Button size="lg" className="gradient-primary shadow-glow" asChild>
+                                <a href={`mailto:${aboutMe.email}`}>
+                                    <Mail className="w-5 h-5 mr-2" />
+                                    Get In Touch
+                                </a>
+                            </Button>
+                        )}
+                        {aboutMe?.resume_url && (
+                            <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
+                                <a href={aboutMe.resume_url} target="_blank" rel="noopener noreferrer">
+                                    <Download className="w-5 h-5 mr-2" />
+                                    Download CV
+                                </a>
+                            </Button>
+                        )}
                     </div>
                 </div>
             </section>
@@ -243,12 +242,12 @@ const Portfolio = () => {
                                     <div key={i} className="space-y-2">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
-                                                {/* <Skeleton className="w-5 h-5" />
-                        <Skeleton className="h-4 w-24" /> */}
+                                                <Skeleton className="w-5 h-5" />
+                                                <Skeleton className="h-4 w-24" />
                                             </div>
-                                            {/* <Skeleton className="h-4 w-8" /> */}
+                                            <Skeleton className="h-4 w-8" />
                                         </div>
-                                        {/* <Skeleton className="h-2 w-full" /> */}
+                                        <Skeleton className="h-2 w-full" />
                                     </div>
                                 ))
                             ) : (
@@ -286,25 +285,25 @@ const Portfolio = () => {
                         {loading ? (
                             Array.from({ length: 6 }).map((_, i) => (
                                 <div key={i} className="animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
-                                    {/* <Card className="overflow-hidden">
-                    <Skeleton className="aspect-video w-full" />
-                    <CardHeader className="space-y-3">
-                      <Skeleton className="h-6 w-3/4" />
-                      <Skeleton className="h-4 w-full" />
-                      <Skeleton className="h-4 w-2/3" />
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="flex flex-wrap gap-1">
-                        {Array.from({ length: 3 }).map((_, j) => (
-                          <Skeleton key={j} className="h-5 w-16" />
-                        ))}
-                      </div>
-                      <div className="flex gap-2">
-                        <Skeleton className="h-9 w-20" />
-                        <Skeleton className="h-9 w-20" />
-                      </div>
-                    </CardContent>
-                  </Card> */}
+                                    <Card className="overflow-hidden">
+                                        <Skeleton className="aspect-video w-full" />
+                                        <CardHeader className="space-y-3">
+                                            <Skeleton className="h-6 w-3/4" />
+                                            <Skeleton className="h-4 w-full" />
+                                            <Skeleton className="h-4 w-2/3" />
+                                        </CardHeader>
+                                        <CardContent className="space-y-3">
+                                            <div className="flex flex-wrap gap-1">
+                                                {Array.from({ length: 3 }).map((_, j) => (
+                                                    <Skeleton key={j} className="h-5 w-16" />
+                                                ))}
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <Skeleton className="h-9 w-20" />
+                                                <Skeleton className="h-9 w-20" />
+                                            </div>
+                                        </CardContent>
+                                    </Card>
                                 </div>
                             ))
                         ) : projects.length === 0 ? (
@@ -314,14 +313,14 @@ const Portfolio = () => {
                         ) : (
                             projects.map((project, index) => (
                                 <div key={project.id} className="animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                                    {/* <ProjectCard 
-                    title={project.title}
-                    description={project.description || ""}
-                    image={project.image || "/placeholder.svg"}
-                    technologies={project.technologies}
-                    demoUrl={project.demo_url}
-                    githubUrl={project.github_url}
-                  /> */}
+                                    <ProjectCard
+                                        title={project.title}
+                                        description={project.description || ""}
+                                        image={project.image || "/placeholder.svg"}
+                                        technologies={project.technologies}
+                                        demoUrl={project.demo_url}
+                                        githubUrl={project.github_url}
+                                    />
                                 </div>
                             ))
                         )}
@@ -340,79 +339,79 @@ const Portfolio = () => {
                             </p>
                         </div>
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {/* {loading ? (
-                Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
-                    <Card className="overflow-hidden">
-                      <CardHeader className="space-y-4">
-                        <Skeleton className="aspect-video w-full rounded-lg" />
-                        <div className="space-y-2">
-                          <Skeleton className="h-5 w-3/4" />
-                          <Skeleton className="h-4 w-1/2" />
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        <Skeleton className="h-5 w-20" />
-                        <Skeleton className="h-4 w-full" />
-                        <Skeleton className="h-4 w-2/3" />
-                      </CardContent>
-                    </Card>
-                  </div>
-                ))
-              ) : (
-                certificates.map((certificate, index) => (
-                  <Card 
-                    key={certificate.id} 
-                    className="group hover:shadow-lg transition-all duration-300 cursor-pointer animate-slide-up" 
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                    onClick={() => handleCertificateClick(certificate)}
-                  >
-                    <CardHeader className="space-y-4">
-                      {certificate.image && (
-                        <div className="relative overflow-hidden rounded-lg aspect-video">
-                          <img
-                            src={certificate.image}
-                            alt={`${certificate.title} certificate`}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                          <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <Award className="w-8 h-8 text-white" />
-                          </div>
-                        </div>
-                      )}
-                      <div>
-                        <CardTitle className="text-lg">{certificate.title}</CardTitle>
-                        <CardDescription className="text-primary font-medium">
-                          {certificate.issuer}
-                        </CardDescription>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      {certificate.issue_date && (
-                        <Badge variant="secondary" className="text-xs">
-                          {formatDate(certificate.issue_date)}
-                        </Badge>
-                      )}
-                      {certificate.description && (
-                        <p className="text-sm text-muted-foreground line-clamp-2">
-                          {certificate.description}
-                        </p>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))
-              )} */}
+                            {loading ? (
+                                Array.from({ length: 4 }).map((_, i) => (
+                                    <div key={i} className="animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
+                                        <Card className="overflow-hidden">
+                                            <CardHeader className="space-y-4">
+                                                <Skeleton className="aspect-video w-full rounded-lg" />
+                                                <div className="space-y-2">
+                                                    <Skeleton className="h-5 w-3/4" />
+                                                    <Skeleton className="h-4 w-1/2" />
+                                                </div>
+                                            </CardHeader>
+                                            <CardContent className="space-y-3">
+                                                <Skeleton className="h-5 w-20" />
+                                                <Skeleton className="h-4 w-full" />
+                                                <Skeleton className="h-4 w-2/3" />
+                                            </CardContent>
+                                        </Card>
+                                    </div>
+                                ))
+                            ) : (
+                                certificates.map((certificate, index) => (
+                                    <Card
+                                        key={certificate.id}
+                                        className="group hover:shadow-lg transition-all duration-300 cursor-pointer animate-slide-up"
+                                        style={{ animationDelay: `${index * 0.1}s` }}
+                                        onClick={() => handleCertificateClick(certificate)}
+                                    >
+                                        <CardHeader className="space-y-4">
+                                            {certificate.image && (
+                                                <div className="relative overflow-hidden rounded-lg aspect-video">
+                                                    <img
+                                                        src={certificate.image}
+                                                        alt={`${certificate.title} certificate`}
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                    />
+                                                    <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                                        <Award className="w-8 h-8 text-white" />
+                                                    </div>
+                                                </div>
+                                            )}
+                                            <div>
+                                                <CardTitle className="text-lg">{certificate.title}</CardTitle>
+                                                <CardDescription className="text-primary font-medium">
+                                                    {certificate.issuer}
+                                                </CardDescription>
+                                            </div>
+                                        </CardHeader>
+                                        <CardContent className="space-y-3">
+                                            {certificate.issue_date && (
+                                                <Badge variant="secondary" className="text-xs">
+                                                    {formatDate(certificate.issue_date)}
+                                                </Badge>
+                                            )}
+                                            {certificate.description && (
+                                                <p className="text-sm text-muted-foreground line-clamp-2">
+                                                    {certificate.description}
+                                                </p>
+                                            )}
+                                        </CardContent>
+                                    </Card>
+                                ))
+                            )}
                         </div>
                     </div>
                 </section>
             )}
 
             {/* Certificate Modal */}
-            {/* <CertificateModal
-        certificate={selectedCertificate}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      /> */}
+            <CertificateModal
+                certificate={selectedCertificate}
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
 
             {/* Footer */}
             <footer className="py-8 px-6 border-t border-border">
