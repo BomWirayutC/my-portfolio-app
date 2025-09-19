@@ -262,7 +262,7 @@ const Portfolio = () => {
                                                 </div>
                                                 <span className="text-sm text-muted-foreground">{skill.level}%</span>
                                             </div>
-                                            {/* <Progress value={skill.level} className="h-2" /> */}
+                                            <Progress value={skill.level} className="h-2" />
                                         </div>
                                     );
                                 })
