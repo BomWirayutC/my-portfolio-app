@@ -6,6 +6,5 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const isOnVercelEnv = (): boolean => {
-    console.log('VERCEL:', process.env.VERCEL);
-    return process.env.VERCEL === '1';
+    return typeof window !== "undefined" && window.location.hostname.endsWith("vercel.app");
 }
