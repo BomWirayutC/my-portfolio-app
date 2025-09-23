@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Button } from "./components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
 import { Badge } from "./components/ui/badge";
@@ -39,7 +40,12 @@ const Portfolio = () => {
   }, []);
 
   const fetchData = async () => {
-    await Promise.all([fetchProjects(), fetchAboutMe(), fetchSkills(), fetchCertificates()]);
+    await Promise.all([
+      fetchProjects(),
+      fetchAboutMe(),
+      fetchSkills(),
+      fetchCertificates(),
+    ]);
     setLoading(false);
   };
 
@@ -175,7 +181,7 @@ const Portfolio = () => {
             <div className="space-y-6">
               {aboutMe?.avatar_url && (
                 <div className="flex justify-center md:justify-start mb-6">
-                  <img
+                  <Image
                     src={aboutMe.avatar_url}
                     alt={aboutMe.name || "Avatar"}
                     className="w-32 h-32 rounded-full object-cover shadow-card"
@@ -331,7 +337,7 @@ const Portfolio = () => {
                     <CardHeader className="space-y-4">
                       {certificate.image && (
                         <div className="relative overflow-hidden rounded-lg aspect-video">
-                          <img
+                          <Image
                             src={certificate.image}
                             alt={`${certificate.title} certificate`}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
