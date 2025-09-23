@@ -182,6 +182,7 @@ const Portfolio = () => {
                     width={32}
                     height={32}
                     className="w-32 h-32 rounded-full object-cover shadow-card"
+                    unoptimized={true}
                   />
                 </div>
               )}
