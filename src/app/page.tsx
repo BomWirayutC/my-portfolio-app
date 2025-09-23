@@ -11,23 +11,14 @@ import Navigation from "./components/Navigation";
 import ProjectCard from "./components/ProjectCard";
 import { CertificateModal } from "./components/CertificateModal";
 import { Mail, Download, Code, Palette, Database, Smartphone, Award } from "lucide-react";
-import { getCertificates, getProfile, getSkills } from "./services/apis";
+import { getCertificates, getProjects, getProfile, getSkills } from "./services/apis";
 import Profile from "./services/models/profile";
 import { Skills } from "./services/models/skills";
 import { Certificate, Certificates } from "./services/models/certificates";
-
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  technologies: string[];
-  demo_url?: string;
-  github_url?: string;
-}
+import { Projects } from "./services/models/projects";
 
 const Portfolio = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<Projects>([]);
   const [aboutMe, setAboutMe] = useState<Profile | null>(null);
   const [skills, setSkills] = useState<Skills>([]);
   const [certificates, setCertificates] = useState<Certificates>([]);
@@ -51,13 +42,11 @@ const Portfolio = () => {
 
   const fetchProjects = async () => {
     try {
-      //   const { data, error } = await supabase
-      //     .from('projects')
-      //     .select('*')
-      //     .order('created_at', { ascending: false });
-
-      //   if (error) throw error;
-      //   setProjects(data || []);
+      await getProjects().then((res) => {
+        if (res.status === 200) {
+          setProjects(res.data);
+        }
+      });
     } catch (error) {
       console.error('Error fetching projects:', error);
     }
@@ -134,13 +123,19 @@ const Portfolio = () => {
         />
         <div className="a bsolute inset-0 bg-black" />
         <div className="relative z-10 text-center text-white px-6 animate-fade-in">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-slide-up">
-            {aboutMe?.name || ""}
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-white/90 animate-slide-up" style={{ animationDelay: "0.2s" }}>
-            {aboutMe?.description || ""}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up" style={{ animationDelay: "0.4s" }}>
+          {
+            aboutMe?.name &&
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-slide-up">
+              {aboutMe?.name || ""}
+            </h1>
+          }
+          {
+            aboutMe?.description &&
+            <p className="text-xl md:text-2xl mb-8 text-white/90 animate-slide-up">
+              {aboutMe?.description || ""}
+            </p>
+          }
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up">
             {aboutMe?.email && (
               <Button size="lg" className="gradient-primary shadow-glow" asChild>
                 <a href={`mailto:${aboutMe.email}`}>
@@ -388,7 +383,7 @@ const Portfolio = () => {
       <footer className="py-8 px-6 border-t border-border">
         <div className="container mx-auto text-center">
           <p className="text-muted-foreground">
-            © 2024 {aboutMe?.name || "Alex Johnson"}. Built with React & Tailwind CSS.
+            © 2025 {aboutMe?.name || ""}
           </p>
         </div>
       </footer>

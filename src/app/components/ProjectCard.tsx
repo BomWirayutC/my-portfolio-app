@@ -20,6 +20,8 @@ const ProjectCard = ({ title, description, image, technologies, demoUrl, githubU
                 <Image
                     src={image}
                     alt={title}
+                    width={400}
+                    height={225}
                     className="w-full h-full object-cover group-hover:scale-105 transition-smooth"
                 />
             </div>
