@@ -184,6 +184,8 @@ const Portfolio = () => {
                   <Image
                     src={aboutMe.avatar_url}
                     alt={aboutMe.name || "Avatar"}
+                    width={32}
+                    height={32}
                     className="w-32 h-32 rounded-full object-cover shadow-card"
                   />
                 </div>
@@ -340,6 +342,7 @@ const Portfolio = () => {
                           <Image
                             src={certificate.image}
                             alt={`${certificate.title} certificate`}
+                            layout="fill"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                           <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">

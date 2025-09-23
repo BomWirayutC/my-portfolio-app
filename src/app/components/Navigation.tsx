@@ -21,7 +21,7 @@ const Navigation = () => {
     };
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg shadow-sm">
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg shadow-sm border border-gray-200">
             <div className="container mx-auto px-6 py-4">
                 <div className="flex items-center justify-between">
                     <Link href="/" className="text-2xl font-bold gradient-primary bg-clip-text text-transparent">

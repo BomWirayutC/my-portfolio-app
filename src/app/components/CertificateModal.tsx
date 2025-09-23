@@ -66,6 +66,8 @@ export const CertificateModal = ({ certificate, isOpen, onClose }: CertificateMo
                                         <Image
                                             src={certificate.image}
                                             alt={`${certificate.title} certificate`}
+                                            width={400}
+                                            height={400}
                                             className={`w-full h-auto rounded-lg shadow-lg transition-opacity ${imageLoading ? "opacity-0" : "opacity-100"
                                                 }`}
                                             onLoad={() => setImageLoading(false)}

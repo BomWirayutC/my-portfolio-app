@@ -154,6 +154,15 @@
   .animate-slide-up {
     animation: slideUp 0.6s ease-out forwards;
   }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
 
 @keyframes float {
