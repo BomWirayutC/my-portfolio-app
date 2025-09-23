@@ -1,9 +1,7 @@
 import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const Navigation = () => {
-    const location = useRouter();
 
     const navItems = [
         { name: "Home", path: "/" },

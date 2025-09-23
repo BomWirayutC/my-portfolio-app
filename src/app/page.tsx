@@ -9,7 +9,7 @@ import { Skeleton } from "./components/ui/skeleton";
 import Navigation from "./components/Navigation";
 import ProjectCard from "./components/ProjectCard";
 import { CertificateModal } from "./components/CertificateModal";
-import { Mail, Github, Linkedin, Download, Code, Palette, Database, Smartphone, Award } from "lucide-react";
+import { Mail, Download, Code, Palette, Database, Smartphone, Award } from "lucide-react";
 import { getCertificates, getProfile, getSkills } from "./services/apis";
 import Profile from "./services/models/profile";
 import { Skills } from "./services/models/skills";

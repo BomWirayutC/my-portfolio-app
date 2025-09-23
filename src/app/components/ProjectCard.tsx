@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { ExternalLink, Github } from "lucide-react";
+import Image from "next/image";
 
 interface ProjectCardProps {
     title: string;
@@ -16,7 +17,7 @@ const ProjectCard = ({ title, description, image, technologies, demoUrl, githubU
     return (
         <Card className="group overflow-hidden shadow-card hover:shadow-elegant transition-spring hover:-translate-y-2">
             <div className="aspect-video overflow-hidden">
-                <img
+                <Image
                     src={image}
                     alt={title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-smooth"

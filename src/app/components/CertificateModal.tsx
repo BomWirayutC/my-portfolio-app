@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { ExternalLink, X } from "lucide-react";
 import { Certificate } from "../services/models/certificates";
+import Image from "next/image";
 
 interface CertificateModalProps {
     certificate: Certificate | null;
@@ -62,7 +63,7 @@ export const CertificateModal = ({ certificate, isOpen, onClose }: CertificateMo
                                         </div>
                                     )}
                                     {!imageError && (
-                                        <img
+                                        <Image
                                             src={certificate.image}
                                             alt={`${certificate.title} certificate`}
                                             className={`w-full h-auto rounded-lg shadow-lg transition-opacity ${imageLoading ? "opacity-0" : "opacity-100"
