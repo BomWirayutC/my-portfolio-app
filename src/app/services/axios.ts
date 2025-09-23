@@ -1,6 +1,10 @@
 import Axios, { AxiosInstance } from "axios";
+import { isOnVercelEnv } from "../utils/utils";
 
-const baseURL: string = "http://localhost:4000/api";
+let baseURL: string = "http://localhost:3000/api"; // Dev
+if (isOnVercelEnv()) {
+    baseURL = "https://my-portfolio-server-wirayut.vercel.app/api"; // Prod
+}
 
 const axios: AxiosInstance = Axios.create({
     baseURL: baseURL,

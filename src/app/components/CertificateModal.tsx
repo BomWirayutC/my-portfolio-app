@@ -3,16 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { ExternalLink, X } from "lucide-react";
-
-interface Certificate {
-    id: string;
-    title: string;
-    issuer: string;
-    image?: string;
-    certificate_url?: string;
-    issue_date?: string;
-    description?: string;
-}
+import { Certificate } from "../services/models/certificates";
 
 interface CertificateModalProps {
     certificate: Certificate | null;
