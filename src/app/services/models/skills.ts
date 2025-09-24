@@ -1,11 +1,11 @@
 export interface Skill {
-    id: string
-    created_at: string
+    id: string | null
+    created_at: string | null
     display_order: number | null
     icon: string | null
     level: number
     name: string
-    updated_at: string
+    updated_at: string | null
 }
 
 export type Skills = Skill[];

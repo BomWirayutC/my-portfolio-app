@@ -11,7 +11,7 @@ import Navigation from "./components/Navigation";
 import ProjectCard from "./components/ProjectCard";
 import { CertificateModal } from "./components/CertificateModal";
 import { Mail, Download, Code, Palette, Database, Smartphone, Award } from "lucide-react";
-import { getCertificates, getProjects, getProfile, getSkills } from "./services/apis";
+import { getCertificates, getProjects, getProfile, getSkills } from "./services/api";
 import Profile from "./services/models/profile";
 import { Skills } from "./services/models/skills";
 import { Certificate, Certificates } from "./services/models/certificates";

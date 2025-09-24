@@ -40,18 +40,14 @@ const ProjectCard = ({ title, description, image, technologies, demoUrl, githubU
                     ))}
                 </div>
                 <div className="flex gap-2">
-                    {demoUrl && (
-                        <Button size="sm" className="gradient-primary">
-                            <ExternalLink className="w-4 h-4 mr-2" />
-                            Demo
-                        </Button>
-                    )}
-                    {githubUrl && (
-                        <Button size="sm" variant="outline">
-                            <Github className="w-4 h-4 mr-2" />
-                            Code
-                        </Button>
-                    )}
+                    <Button size="sm" className="gradient-primary" disabled={!demoUrl}>
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Demo
+                    </Button>
+                    <Button size="sm" variant="outline" disabled={!githubUrl}>
+                        <Github className="w-4 h-4 mr-2" />
+                        Code
+                    </Button>
                 </div>
             </CardContent>
         </Card>
