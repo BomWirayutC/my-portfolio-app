@@ -284,8 +284,8 @@ const Portfolio = () => {
                                         description={project.description || ""}
                                         image={project.image || "/placeholder.svg"}
                                         technologies={project.technologies}
-                                        demoUrl={project.demo_url}
-                                        githubUrl={project.github_url}
+                                        demoUrl={project.demo_url || ""}
+                                        githubUrl={project.github_url || ""}
                                     />
                                 </div>
                             ))
