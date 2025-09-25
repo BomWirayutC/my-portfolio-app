@@ -46,11 +46,10 @@ export const updateProfile = async (request: Profile): Promise<AxiosResponse<nul
     return response.data;
 }
 
-export const uploadFile = async (accessToken: string, formData: FormData): Promise<AxiosResponse<FileResult>> => {
+export const uploadFile = async (formData: FormData): Promise<AxiosResponse<FileResult>> => {
     const response = await axios.post<AxiosResponse<FileResult>>("/uploadFile", formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
-            'x-access-token': accessToken || ''
         }
     });
     return response.data;

@@ -34,6 +34,7 @@ import {
     uploadFile
 } from "../services/api";
 import { Toaster } from "../components/ui/toaster";
+import { localStorageUtil } from "../utils/localStorageUtil";
 
 interface SkillForm {
     name: string;
@@ -148,18 +149,71 @@ const Admin = () => {
     });
 
     useEffect(() => {
+        let timeoutId: NodeJS.Timeout;
+
         const checkAuthAndFetchData = async () => {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) {
+                localStorageUtil.removeItem('adminLoginTime');
                 navigate.replace("/admin-login");
             } else {
                 fetchProjects();
                 fetchAboutMe();
                 fetchSkills();
                 fetchCertificates();
+
+                // Check if login time exists and calculate remaining time
+                const loginTimeStr = localStorageUtil.getItem<string>('adminLoginTime');
+                if (loginTimeStr) {
+                    const loginTime = parseInt(loginTimeStr);
+                    const elapsed = Date.now() - loginTime;
+                    const remainingTime = (10 * 60 * 1000) - elapsed; // 10 minutes - elapsed time
+
+                    if (remainingTime <= 0) {
+                        // Session already expired
+                        await supabase.auth.signOut();
+                        localStorageUtil.removeItem('adminLoginTime');
+                        toast({
+                            title: "Session Expired",
+                            description: "Admin session has expired. Please log in again.",
+                            variant: "destructive",
+                        });
+                        navigate.replace("/admin-login");
+                        return;
+                    }
+
+                    // Set timeout for remaining time
+                    timeoutId = setTimeout(async () => {
+                        await supabase.auth.signOut();
+                        localStorageUtil.removeItem('adminLoginTime');
+                        toast({
+                            title: "Session Expired",
+                            description: "Admin session has expired. Please log in again.",
+                            variant: "destructive",
+                        });
+                        navigate.replace("/admin-login");
+                    }, remainingTime);
+                }
             }
         };
+
         checkAuthAndFetchData();
+
+        // Listen for auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            (event, session) => {
+                if (!session) {
+                    if (timeoutId) clearTimeout(timeoutId);
+                    localStorage.removeItem('adminLoginTime');
+                    navigate.replace("/admin-login");
+                }
+            }
+        );
+
+        return () => {
+            subscription.unsubscribe();
+            if (timeoutId) clearTimeout(timeoutId);
+        };
     }, [navigate, toast]);
 
     const fetchProjects = async () => {
@@ -281,12 +335,14 @@ const Admin = () => {
                 created_at: null,
                 updated_at: null,
             }).then((res) => {
+                console.log(res)
                 if (res.status == 200) {
                     toast({
                         title: "Success!",
                         description: "About me updated successfully.",
                     });
                 } else {
+
                     throw new Error(res.message);
                 }
             })
@@ -648,9 +704,6 @@ const Admin = () => {
 
     const uploadImage = async (file: File, bucket: string, fileName?: string): Promise<string | null> => {
         try {
-            const token = (await supabase.auth.getSession()).data.session?.access_token;
-            if (!token) throw new Error("No access token");
-
             const fileExt = file.name.split('.').pop();
             const uniqueFileName = fileName || `${Date.now()}.${fileExt}`;
 
@@ -660,7 +713,7 @@ const Admin = () => {
             formData.append('fileName', uniqueFileName);
 
             let fileUrlResult = "";
-            const res = await uploadFile(token, formData);
+            const res = await uploadFile(formData);
             if (res.status === 200) {
                 fileUrlResult = res.data.fileUrl || "";
             } else {

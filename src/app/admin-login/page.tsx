@@ -10,6 +10,7 @@ import { useToast } from "../utils/hooks/useToast";
 import { Lock } from "lucide-react";
 import { supabase } from "../services/supabase/client";
 import { Toaster } from "../components/ui/toaster";
+import { localStorageUtil } from "../utils/localStorageUtil";
 
 const AdminLogin = () => {
     const [email, setEmail] = useState("");
@@ -46,6 +47,7 @@ const AdminLogin = () => {
                     variant: "destructive",
                 });
             } else {
+                localStorageUtil.setItem('adminLoginTime', Date.now().toString());
                 toast({
                     title: "Sign In Successful",
                     description: "Welcome to the admin dashboard",
