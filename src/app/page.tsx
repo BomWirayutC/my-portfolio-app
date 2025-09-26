@@ -113,7 +113,7 @@ const Portfolio = () => {
 
     return (
         <div className="min-h-screen bg-background">
-            <Navigation />
+            <Navigation isDisplayProjectNav={projects.length > 0} isDisplayCertificateNav={certificates.length > 0} />
 
             {/* Hero Section */}
             <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
