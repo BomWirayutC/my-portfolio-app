@@ -1,11 +1,13 @@
+'use client'
+
 import Link from "next/link";
 
-const Navigation = () => {
+const Navigation = ({ isDisplayProjectNav, isDisplayCertificateNav }: { isDisplayProjectNav: boolean, isDisplayCertificateNav: boolean }) => {
     const navItems = [
-        { name: "Home", path: "/" },
-        { name: "About", path: "#about" },
-        { name: "Projects", path: "#projects" },
-        { name: "Certificates", path: "#certificates" },
+        { name: "Home", path: "/", display: true },
+        { name: "About", path: "#about", display: true },
+        { name: "Projects", path: "#projects", display: isDisplayProjectNav },
+        { name: "Certificates", path: "#certificates", display: isDisplayCertificateNav },
     ];
 
     const scrollToSection = (sectionId: string) => {
@@ -28,10 +30,10 @@ const Navigation = () => {
 
                     <div className="hidden md:flex items-center space-x-8">
                         {navItems.map((item) => (
-                            <button
+                            item.display && <button
                                 key={item.name}
                                 onClick={() => scrollToSection(item.path)}
-                                className="text-foreground/80 hover:text-primary transition-smooth relative group"
+                                className="text-foreground/80 font-bold hover:text-primary transition-smooth relative group"
                             >
                                 {item.name}
                                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-smooth" />
