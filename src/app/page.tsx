@@ -1,50 +1,126 @@
+'use client'
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "./components/ui/button";
+import { Card, CardContent, CardHeader } from "./components/ui/card";
 import { Progress } from "./components/ui/progress";
+import { Skeleton } from "./components/ui/skeleton";
 import Navigation from "./components/Navigation";
 import ProjectCard from "./components/ProjectCard";
-import { Mail, Download, Code, Palette, Database, Smartphone, Award } from "lucide-react";
+import { Mail, Download, Code, Palette, Database, Smartphone } from "lucide-react";
 import { getCertificates, getProjects, getProfile, getSkills } from "./services/api";
 import Profile from "./services/models/profile";
 import { Skills } from "./services/models/skills";
-import { Certificates } from "./services/models/certificates";
+import { Certificate, Certificates } from "./services/models/certificates";
 import { Projects } from "./services/models/projects";
 import CertificateSection from "./components/CertificateSection";
 
-const getSkillIcon = (iconName?: string) => {
-    switch (iconName) {
-        case 'Code': return Code;
-        case 'Database': return Database;
-        case 'Palette': return Palette;
-        case 'Smartphone': return Smartphone;
-        default: return Code;
-    }
-};
+const Portfolio = () => {
+    const [projects, setProjects] = useState<Projects>([]);
+    const [aboutMe, setAboutMe] = useState<Profile | null>(null);
+    const [skills, setSkills] = useState<Skills>([]);
+    const [certificates, setCertificates] = useState<Certificates>([]);
+    const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-export default async function Portfolio() {
-    const [projectsRes, aboutMeRes, skillsRes, certificatesRes] = await Promise.all([
-        getProjects(),
-        getProfile(),
-        getSkills(),
-        getCertificates(),
-    ]);
+    useEffect(() => {
+        fetchData();
+    }, []);
 
-    const projects: Projects = projectsRes.status === 200 ? projectsRes.data : [];
-    const aboutMe: Profile | null = aboutMeRes.status === 200 ? aboutMeRes.data : null;
-    const skills: Skills = skillsRes.status === 200 ? skillsRes.data : [];
-    const certificates: Certificates = certificatesRes.status === 200 ? certificatesRes.data : [];
+    const fetchData = async () => {
+        await Promise.all([
+            fetchProjects(),
+            fetchAboutMe(),
+            fetchSkills(),
+            fetchCertificates(),
+        ]);
+        setLoading(false);
+    };
+
+    const fetchProjects = async () => {
+        try {
+            await getProjects().then((res) => {
+                if (res.status === 200) {
+                    setProjects(res.data);
+                }
+            });
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+        }
+    };
+
+    const fetchAboutMe = async () => {
+        try {
+            await getProfile().then((res) => {
+                if (res.status === 200) {
+                    setAboutMe(res.data);
+                }
+            });
+        } catch (error) {
+            console.error('Error fetching about me:', error);
+        }
+    };
+
+    const fetchSkills = async () => {
+        try {
+            await getSkills().then((res) => {
+                if (res.status === 200) {
+                    setSkills(res.data);
+                }
+            });
+        } catch (error) {
+            console.error('Error fetching skills:', error);
+        }
+    };
+
+    const fetchCertificates = async () => {
+        try {
+            await getCertificates().then((res) => {
+                if (res.status === 200) {
+                    setCertificates(res.data);
+                }
+            });
+        } catch (error) {
+            console.error('Error fetching certificates:', error);
+        }
+    };
+
+    const getSkillIcon = (iconName?: string) => {
+        switch (iconName) {
+            case 'Code': return Code;
+            case 'Database': return Database;
+            case 'Palette': return Palette;
+            case 'Smartphone': return Smartphone;
+            default: return Code;
+        }
+    };
+
+    const handleCertificateClick = (certificate: Certificate) => {
+        setSelectedCertificate(certificate);
+        setIsModalOpen(true);
+    };
+
+    const formatDate = (dateString?: string) => {
+        if (!dateString) return "";
+        return new Date(dateString).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+        });
+    };
 
     return (
         <div className="min-h-screen bg-background">
             <Navigation isDisplayProjectNav={projects.length > 0} isDisplayCertificateNav={certificates.length > 0} />
 
-            {/* Main Section */}
+            {/* Hero Section */}
             <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
                 <div
                     className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                    style={{ backgroundImage: `url(${aboutMe?.cover_image || "/hero-workspace.jpg"})`, zIndex: 1 }}
+                    style={{ backgroundImage: `url(${aboutMe?.cover_image || "/hero-workspace.jpg"})` }}
                 />
-                <div className="absolute inset-0 bg-black" />
+                <div className="a bsolute inset-0 bg-black" />
                 <div className="relative z-10 text-center text-white px-6 animate-fade-in">
                     {
                         aboutMe?.name &&
@@ -79,8 +155,8 @@ export default async function Portfolio() {
                 </div>
             </section>
 
-            {/* Profile Section */}
-            <section id="profile" className="py-24 px-6">
+            {/* About Section */}
+            <section id="about" className="py-24 px-6">
                 <div className="container mx-auto">
                     <div className="text-center mb-16">
                         <h2 className="text-4xl font-bold mb-4">{aboutMe?.title || "About Me"}</h2>
@@ -126,21 +202,36 @@ export default async function Portfolio() {
                             </div>
                         </div>
                         <div className="space-y-4">
-                            {skills.map((skill) => {
-                                const SkillIcon = getSkillIcon(skill.icon || "");
-                                return (
-                                    <div key={skill.id} className="space-y-2">
+                            {loading ? (
+                                Array.from({ length: 4 }).map((_, i) => (
+                                    <div key={i} className="space-y-2">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
-                                                <SkillIcon className="w-5 h-5 text-primary" />
-                                                <span className="font-medium">{skill.name}</span>
+                                                <Skeleton className="w-5 h-5" />
+                                                <Skeleton className="h-4 w-24" />
                                             </div>
-                                            <span className="text-sm text-muted-foreground">{skill.level}%</span>
+                                            <Skeleton className="h-4 w-8" />
                                         </div>
-                                        <Progress value={skill.level} className="h-2" />
+                                        <Skeleton className="h-2 w-full" />
                                     </div>
-                                );
-                            })}
+                                ))
+                            ) : (
+                                skills.map((skill) => {
+                                    const SkillIcon = getSkillIcon(skill.icon || "");
+                                    return (
+                                        <div key={skill.id} className="space-y-2">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-2">
+                                                    <SkillIcon className="w-5 h-5 text-primary" />
+                                                    <span className="font-medium">{skill.name}</span>
+                                                </div>
+                                                <span className="text-sm text-muted-foreground">{skill.level}%</span>
+                                            </div>
+                                            <Progress value={skill.level} className="h-2" />
+                                        </div>
+                                    );
+                                })
+                            )}
                         </div>
                     </div>
                 </div>
@@ -156,7 +247,31 @@ export default async function Portfolio() {
                         </p>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {projects.length === 0 ? (
+                        {loading ? (
+                            Array.from({ length: 6 }).map((_, i) => (
+                                <div key={i} className="animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
+                                    <Card className="overflow-hidden">
+                                        <Skeleton className="aspect-video w-full" />
+                                        <CardHeader className="space-y-3">
+                                            <Skeleton className="h-6 w-3/4" />
+                                            <Skeleton className="h-4 w-full" />
+                                            <Skeleton className="h-4 w-2/3" />
+                                        </CardHeader>
+                                        <CardContent className="space-y-3">
+                                            <div className="flex flex-wrap gap-1">
+                                                {Array.from({ length: 3 }).map((_, j) => (
+                                                    <Skeleton key={j} className="h-5 w-16" />
+                                                ))}
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <Skeleton className="h-9 w-20" />
+                                                <Skeleton className="h-9 w-20" />
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                            ))
+                        ) : projects.length === 0 ? (
                             <div className="col-span-full text-center py-8">
                                 <p className="text-muted-foreground">No projects found.</p>
                             </div>
@@ -193,4 +308,6 @@ export default async function Portfolio() {
             </footer>
         </div>
     );
-}
+};
+
+export default Portfolio;

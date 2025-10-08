@@ -1,53 +1,53 @@
 import axios from "./axios";
-import AxiosResponse from "./response";
+import ApiResponse from "./response";
 import Profile from "./models/profile";
 import { Skill, Skills } from "./models/skills";
 import { Certificate, Certificates } from "./models/certificates";
 import { Project, Projects } from "./models/projects";
 import FileResult from "./models/fileResult";
 
-export const getProfile = async (): Promise<AxiosResponse<Profile>> => {
-    const response = await axios.get<AxiosResponse<Profile>>("/getProfile");
+export const getProfile = async (): Promise<ApiResponse<Profile>> => {
+    const response = await axios.get<ApiResponse<Profile>>("/getProfile");
     return response.data;
 }
 
-export const getSkills = async (): Promise<AxiosResponse<Skills>> => {
-    const response = await axios.get<AxiosResponse<Skills>>("/getSkills");
+export const getSkills = async (): Promise<ApiResponse<Skills>> => {
+    const response = await axios.get<ApiResponse<Skills>>("/getSkills");
     return response.data;
 }
 
-export const getCertificates = async (): Promise<AxiosResponse<Certificates>> => {
-    const response = await axios.get<AxiosResponse<Certificates>>("/getCertificates");
+export const getCertificates = async (): Promise<ApiResponse<Certificates>> => {
+    const response = await axios.get<ApiResponse<Certificates>>("/getCertificates");
     return response.data;
 }
 
-export const getProjects = async (): Promise<AxiosResponse<Projects>> => {
-    const response = await axios.get<AxiosResponse<Projects>>("/getProjects");
+export const getProjects = async (): Promise<ApiResponse<Projects>> => {
+    const response = await axios.get<ApiResponse<Projects>>("/getProjects");
     return response.data;
 }
 
-export const addSkill = async (request: Skill): Promise<AxiosResponse<null>> => {
-    const response = await axios.post<AxiosResponse<null>>("/addSkill", request);
+export const addSkill = async (request: Skill): Promise<ApiResponse<null>> => {
+    const response = await axios.post<ApiResponse<null>>("/addSkill", request);
     return response.data;
 }
 
-export const updateSkillById = async (request: Skill): Promise<AxiosResponse<null>> => {
-    const response = await axios.post<AxiosResponse<null>>("/updateSkillById", request);
+export const updateSkillById = async (request: Skill): Promise<ApiResponse<null>> => {
+    const response = await axios.post<ApiResponse<null>>("/updateSkillById", request);
     return response.data;
 }
 
-export const deleteSkillById = async (id: string): Promise<AxiosResponse<null>> => {
-    const response = await axios.post<AxiosResponse<null>>("/deleteSkillById", { id });
+export const deleteSkillById = async (id: string): Promise<ApiResponse<null>> => {
+    const response = await axios.post<ApiResponse<null>>("/deleteSkillById", { id });
     return response.data;
 }
 
-export const updateProfile = async (request: Profile): Promise<AxiosResponse<null>> => {
-    const response = await axios.post<AxiosResponse<null>>("/updateProfile", request);
+export const updateProfile = async (request: Profile): Promise<ApiResponse<null>> => {
+    const response = await axios.post<ApiResponse<null>>("/updateProfile", request);
     return response.data;
 }
 
-export const uploadFile = async (formData: FormData): Promise<AxiosResponse<FileResult>> => {
-    const response = await axios.post<AxiosResponse<FileResult>>("/uploadFile", formData, {
+export const uploadFile = async (formData: FormData): Promise<ApiResponse<FileResult>> => {
+    const response = await axios.post<ApiResponse<FileResult>>("/uploadFile", formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         }
@@ -55,32 +55,32 @@ export const uploadFile = async (formData: FormData): Promise<AxiosResponse<File
     return response.data;
 }
 
-export const addProject = async (request: Project): Promise<AxiosResponse<null>> => {
-    const response = await axios.post<AxiosResponse<null>>("/addProject", request);
+export const addProject = async (request: Project): Promise<ApiResponse<null>> => {
+    const response = await axios.post<ApiResponse<null>>("/addProject", request);
     return response.data;
 }
 
-export const updateProjectById = async (request: Project): Promise<AxiosResponse<null>> => {
-    const response = await axios.post<AxiosResponse<null>>("/updateProjectById", request);
+export const updateProjectById = async (request: Project): Promise<ApiResponse<null>> => {
+    const response = await axios.post<ApiResponse<null>>("/updateProjectById", request);
     return response.data;
 }
 
-export const deleteProjectById = async (id: string): Promise<AxiosResponse<null>> => {
-    const response = await axios.post<AxiosResponse<null>>("/deleteProjectById", { id });
+export const deleteProjectById = async (id: string): Promise<ApiResponse<null>> => {
+    const response = await axios.post<ApiResponse<null>>("/deleteProjectById", { id });
     return response.data;
 }
 
-export const addCertificate = async (request: Certificate): Promise<AxiosResponse<null>> => {
-    const response = await axios.post<AxiosResponse<null>>("/addCertificate", request);
+export const addCertificate = async (request: Certificate): Promise<ApiResponse<null>> => {
+    const response = await axios.post<ApiResponse<null>>("/addCertificate", request);
     return response.data;
 }
 
-export const updateCertificateById = async (request: Certificate): Promise<AxiosResponse<null>> => {
-    const response = await axios.post<AxiosResponse<null>>("/updateCertificateById", request);
+export const updateCertificateById = async (request: Certificate): Promise<ApiResponse<null>> => {
+    const response = await axios.post<ApiResponse<null>>("/updateCertificateById", request);
     return response.data;
 }
 
-export const deleteCertificateById = async (id: string): Promise<AxiosResponse<null>> => {
-    const response = await axios.post<AxiosResponse<null>>("/deleteCertificateById", { id });
+export const deleteCertificateById = async (id: string): Promise<ApiResponse<null>> => {
+    const response = await axios.post<ApiResponse<null>>("/deleteCertificateById", { id });
     return response.data;
 }
