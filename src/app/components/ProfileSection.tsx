@@ -37,22 +37,22 @@ const profileDataSection = ({
                 )}
             </div>
             <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div className="space-y-6">
+                <div className="space-y-6 ">
                     {profileData?.avatar_url && (
-                        <div className="flex justify-center md:justify-start mb-6">
+                        <div className="flex justify-center mb-6">
                             <Image
                                 src={profileData.avatar_url}
                                 alt={profileData.name || "Avatar"}
-                                width={32}
-                                height={32}
-                                className="w-32 h-32 rounded-full object-cover shadow-card"
+                                width={50}
+                                height={50}
+                                className="w-50 h-50 rounded-full object-cover shadow-card"
                                 unoptimized={true}
                             />
                         </div>
                     )}
                     <div className="space-y-4">
                         {profileData?.email && (
-                            <p className="flex items-center gap-2 text-lg">
+                            <p className="flex justify-center items-center gap-2 text-lg">
                                 <Mail className="w-5 h-5 text-primary" />
                                 <a href={`mailto:${profileData.email}`} className="hover:text-primary transition-colors">
                                     {profileData.email}
@@ -60,13 +60,13 @@ const profileDataSection = ({
                             </p>
                         )}
                         {profileData?.phone && (
-                            <p className="flex items-center gap-2 text-lg">
+                            <p className="flex justify-center items-center gap-2 text-lg">
                                 📞 {profileData.phone}
                             </p>
                         )}
                     </div>
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-4 pr-0 md:pr-30">
                     {isLoading ? (
                         Array.from({ length: 4 }).map((_, i) => (
                             <div key={i} className="space-y-2">
