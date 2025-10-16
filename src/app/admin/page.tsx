@@ -1913,7 +1913,7 @@ const Admin = () => {
                             onDragEnd={handleProjectDragEnd}
                         >
                             <SortableContext
-                                items={projects.map(p => p.id ?? "-1")}
+                                items={projects.map(p => p.id || "-1")}
                                 strategy={verticalListSortingStrategy}
                             >
                                 <div className="grid gap-4">

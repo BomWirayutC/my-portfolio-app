@@ -35,7 +35,7 @@ export function SortableSkillItem({ skill, onEdit, onDelete }: SortableSkillItem
         opacity: isDragging ? 0.5 : 1,
     };
 
-    const SkillIcon = getSkillIcon(skill.icon ?? "");
+    const SkillIcon = getSkillIcon(skill.icon || "");
 
     return (
         <Card ref={setNodeRef} style={style} className="shadow-card">
@@ -77,7 +77,7 @@ export function SortableSkillItem({ skill, onEdit, onDelete }: SortableSkillItem
                         <Button
                             size="sm"
                             variant="destructive"
-                            onClick={() => onDelete(skill.id ?? "-1")}
+                            onClick={() => onDelete(skill.id || "-1")}
                         >
                             <Trash2 className="w-4 h-4" />
                         </Button>
@@ -103,7 +103,7 @@ export function SortableProjectItem({ project, onEdit, onDelete }: SortableProje
         transform,
         transition,
         isDragging,
-    } = useSortable({ id: project.id ?? "-1" });
+    } = useSortable({ id: project.id || "-1" });
 
     const style = {
         transform: CSS.Transform.toString(transform),
@@ -137,7 +137,7 @@ export function SortableProjectItem({ project, onEdit, onDelete }: SortableProje
                         <Button
                             size="sm"
                             variant="destructive"
-                            onClick={() => onDelete(project.id ?? "-1")}
+                            onClick={() => onDelete(project.id || "-1")}
                         >
                             <Trash2 className="w-4 h-4" />
                         </Button>
@@ -245,7 +245,7 @@ export function SortableSocialLinkItem({ socialLink, onEdit, onDelete }: Sortabl
         opacity: isDragging ? 0.5 : 1,
     };
 
-    const SocialIcon = getSocialIcon(socialLink.icon ?? "");
+    const SocialIcon = getSocialIcon(socialLink.icon || "");
 
     return (
         <Card ref={setNodeRef} style={style} className="shadow-card">

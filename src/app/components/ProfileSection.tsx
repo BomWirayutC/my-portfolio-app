@@ -98,7 +98,7 @@ const ProfileSection = ({
                         <div className="flex gap-4 flex-wrap justify-center items-center">
                             {
                                 socialLinks.map((link) => {
-                                    const SocialIcon = getSocialIcon(link.icon);
+                                    const SocialIcon = getSocialIcon(link.icon || "");
                                     return (
                                         <Button
                                             key={link.id}
