@@ -245,7 +245,7 @@ export function SortableSocialLinkItem({ socialLink, onEdit, onDelete }: Sortabl
         opacity: isDragging ? 0.5 : 1,
     };
 
-    const SocialIcon = getSocialIcon(socialLink.icon);
+    const SocialIcon = getSocialIcon(socialLink.icon ?? "");
 
     return (
         <Card ref={setNodeRef} style={style} className="shadow-card">
