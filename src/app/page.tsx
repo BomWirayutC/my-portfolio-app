@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { getCertificates, getProjects, getProfile, getSkills } from "./services/api";
+import { getCertificates, getProjects, getProfile, getSkills, getSocialLinks } from "./services/api";
 import { Profile, SocialLinks, Skills, Certificates, Projects } from "./services/models";
 import {
     MainCoverSection,
@@ -11,7 +11,6 @@ import {
     ProjectSection,
     LoadingOverlay,
 } from "./components";
-import { supabase } from "./services/supabase/client";
 
 const Portfolio = () => {
     const [projects, setProjects] = useState<Projects>([]);
@@ -61,13 +60,11 @@ const Portfolio = () => {
 
     const fetchSocialLinks = async () => {
         try {
-            const { data, error } = await supabase
-                .from('social_links')
-                .select('*')
-                .order('display_order', { ascending: true });
-
-            if (error) throw error;
-            setSocialLinks(data || []);
+            await getSocialLinks().then((res) => {
+                if (res.status === 200) {
+                    setSocialLinks(res.data);
+                }
+            });
         } catch (error) {
             console.error('Error fetching social links:', error);
         }

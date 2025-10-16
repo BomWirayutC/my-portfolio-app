@@ -17,13 +17,16 @@ import {
     addCertificate,
     addProject,
     addSkill,
+    addSocialLink,
     deleteCertificateById,
     deleteProjectById,
     deleteSkillById,
+    deleteSocialLinkById,
     getCertificates,
     getProfile,
     getProjects,
     getSkills,
+    getSocialLinks,
     updateCertificateById,
     updateCertificateDisplayOrder,
     updateProfile,
@@ -31,6 +34,8 @@ import {
     updateProjectDisplayOrder,
     updateSkillById,
     updateSkillDisplayOrder,
+    updateSocialLinkById,
+    updateSocialLinkDisplayOrder,
     uploadFile
 } from "../services/api";
 import { Toaster } from "../components/ui/toaster";
@@ -281,17 +286,16 @@ const Admin = () => {
 
     const fetchSocialLinks = async () => {
         try {
-            const { data, error } = await supabase
-                .from('social_links')
-                .select('*')
-                .order('display_order', { ascending: true });
-
-            if (error) throw error;
-            setSocialLinks(data || []);
+            await getSocialLinks().then((res) => {
+                if (res.status === 200) {
+                    setSocialLinks(res.data);
+                }
+            });
         } catch (error) {
+            const err = handleAxiosError(error);
             toast({
                 title: "Error",
-                description: "Failed to fetch social links",
+                description: err ? err.message : "Something went wrong.",
                 variant: "destructive",
             });
         }
@@ -378,7 +382,6 @@ const Admin = () => {
                         description: "Profile updated successfully.",
                     });
                 } else {
-
                     throw new Error(res.message);
                 }
             })
@@ -409,61 +412,61 @@ const Admin = () => {
     }, 100);
 
     const onSocialLinkSubmit = async (data: SocialLinkForm) => {
-        if (!profile?.id) {
-            toast({
-                title: "Error",
-                description: "Please create About Me section first",
-                variant: "destructive",
-            });
-            return;
-        }
-
         setIsLoading(true);
         try {
             if (editingSocialLink) {
                 // Update existing social link
-                const { error } = await supabase
-                    .from('social_links')
-                    .update({
-                        platform: data.platform,
-                        url: data.url,
-                        icon: data.icon || null,
-                    })
-                    .eq('id', editingSocialLink.id);
 
-                if (error) throw error;
-                toast({
-                    title: "Success!",
-                    description: "Social link updated successfully.",
-                });
+                await updateSocialLinkById({
+                    id: editingSocialLink.id,
+                    platform: data.platform,
+                    url: data.url,
+                    icon: data.icon || null,
+                }).then((res) => {
+                    console.log(res)
+                    if (res.status == 200) {
+                        toast({
+                            title: "Success!",
+                            description: "Social link updated successfully.",
+                        });
+                    } else {
+                        throw new Error(res.message);
+                    }
+                })
             } else {
                 // Create new social link with highest order
-                const maxOrder = Math.max(...socialLinks.map(s => s.display_order || 0), -1);
-                const { error } = await supabase
-                    .from('social_links')
-                    .insert([{
-                        about_me_id: profile.id,
-                        platform: data.platform,
-                        url: data.url,
-                        icon: data.icon || null,
-                        display_order: maxOrder + 1,
-                    }]);
-
-                if (error) throw error;
-                toast({
-                    title: "Success!",
-                    description: "Social link created successfully.",
+                await addSocialLink({
+                    id: "",
+                    about_me_id: profile?.id,
+                    platform: data.platform,
+                    url: data.url,
+                    icon: data.icon || null,
+                }).then((res) => {
+                    if (res.status == 200) {
+                        toast({
+                            title: "Success!",
+                            description: "Social link created successfully.",
+                        });
+                    } else {
+                        throw new Error(res.message);
+                    }
                 });
             }
 
-            socialLinkForm.reset();
+            socialLinkForm.reset({
+                platform: "",
+                url: "",
+                icon: "Github",
+            });
             setEditingSocialLink(null);
             setIsAddingNewSocialLink(false);
             fetchSocialLinks();
+            onScrollToSocialLinks();
         } catch (error) {
+            const err = handleAxiosError(error);
             toast({
                 title: "Error",
-                description: "Failed to save social link. Make sure you're authenticated.",
+                description: err ? err.message : "Something went wrong.",
                 variant: "destructive",
             });
         }
@@ -478,41 +481,44 @@ const Admin = () => {
             icon: socialLink.icon || "Github",
         });
         setIsAddingNewSocialLink(true);
-        setTimeout(() => {
-            socialLinkFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
+        onScrollToSocialLinks();
     };
 
     const handleSocialLinkDelete = async (id: string) => {
         if (!confirm("Are you sure you want to delete this social link?")) return;
 
         try {
-            const { error } = await supabase
-                .from('social_links')
-                .delete()
-                .eq('id', id);
-
-            if (error) throw error;
-
-            toast({
-                title: "Success!",
-                description: "Social link deleted successfully.",
-            });
+            await deleteSocialLinkById(id).then((res) => {
+                if (res.status === 200) {
+                    toast({
+                        title: "Success!",
+                        description: "Social link deleted successfully.",
+                    });
+                } else {
+                    throw new Error(res.message);
+                }
+            })
 
             fetchSocialLinks();
         } catch (error) {
+            const err = handleAxiosError(error);
             toast({
                 title: "Error",
-                description: "Failed to delete social link",
+                description: err ? err.message : "Something went wrong.",
                 variant: "destructive",
             });
         }
     };
 
     const handleSocialLinkCancel = () => {
-        socialLinkForm.reset();
+        socialLinkForm.reset({
+            platform: "",
+            url: "",
+            icon: "Github",
+        });
         setEditingSocialLink(null);
         setIsAddingNewSocialLink(false);
+        onScrollToSocialLinks();
     };
 
     const handleSocialLinkDragEnd = async (event: DragEndEvent) => {
@@ -530,23 +536,21 @@ const Admin = () => {
 
         // Update display_order in database
         try {
-            const updates = newSocialLinks.map((link, index) =>
-                supabase
-                    .from('social_links')
-                    .update({ display_order: index })
-                    .eq('id', link.id)
-            );
-
-            await Promise.all(updates);
-
-            toast({
-                title: "Success!",
-                description: "Social link order updated successfully.",
-            });
+            await updateSocialLinkDisplayOrder(newSocialLinks).then((res) => {
+                if (res.status == 200) {
+                    toast({
+                        title: "Success!",
+                        description: "Social link order updated successfully.",
+                    });
+                } else {
+                    throw new Error(res.message);
+                }
+            })
         } catch (error) {
+            const err = handleAxiosError(error);
             toast({
                 title: "Error",
-                description: "Failed to update social link order",
+                description: err ? err.message : "Something went wrong.",
                 variant: "destructive",
             });
             // Revert on error
@@ -615,7 +619,14 @@ const Admin = () => {
                 })
             }
 
-            projectForm.reset();
+            projectForm.reset({
+                title: "",
+                description: "",
+                image: "",
+                technologies: "",
+                demo_url: "",
+                github_url: "",
+            });
             setEditingProject(null);
             setIsAddingNewProject(false);
             setProjectImageFile(null);
@@ -650,6 +661,8 @@ const Admin = () => {
     };
 
     const handleProjectDelete = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this project?")) return;
+
         try {
             await deleteProjectById(id).then((res) => {
                 if (res.status == 200) {
@@ -673,7 +686,14 @@ const Admin = () => {
     };
 
     const handleProjectCancel = () => {
-        projectForm.reset();
+        projectForm.reset({
+            title: "",
+            description: "",
+            image: "",
+            technologies: "",
+            demo_url: "",
+            github_url: "",
+        });
         setEditingProject(null);
         setIsAddingNewProject(false);
         setProjectImageFile(null);
@@ -737,6 +757,8 @@ const Admin = () => {
     };
 
     const handleSkillDelete = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this skill?")) return;
+
         try {
             await deleteSkillById(id).then((res) => {
                 if (res.status === 200) {
@@ -760,7 +782,11 @@ const Admin = () => {
     };
 
     const handleSkillCancel = () => {
-        skillForm.reset();
+        skillForm.reset({
+            name: "",
+            level: 50,
+            icon: "Code",
+        });
         setEditingSkill(null);
         setIsAddingNewSkill(false);
         onScrollToSkill();
@@ -810,7 +836,11 @@ const Admin = () => {
                     }
                 });
             }
-            skillForm.reset();
+            skillForm.reset({
+                name: "",
+                level: 50,
+                icon: "Code",
+            });
             setEditingSkill(null);
             setIsAddingNewSkill(false);
             fetchSkills();
@@ -880,6 +910,8 @@ const Admin = () => {
     };
 
     const handleCertificateDelete = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this certificate?")) return;
+
         try {
             await deleteCertificateById(id).then((res) => {
                 if (res.status == 200) {
@@ -903,7 +935,15 @@ const Admin = () => {
     };
 
     const handleCertificateCancel = () => {
-        certificateForm.reset();
+        certificateForm.reset({
+            title: "",
+            issuer: "",
+            image: "",
+            certificate_url: "",
+            issue_date: "",
+            description: "",
+            display_order: 0,
+        });
         setEditingCertificate(null);
         setIsAddingNewCertificate(false);
         setCertificateImageFile(null);
@@ -969,7 +1009,15 @@ const Admin = () => {
                 })
             }
 
-            certificateForm.reset();
+            certificateForm.reset({
+                title: "",
+                issuer: "",
+                image: "",
+                certificate_url: "",
+                issue_date: "",
+                description: "",
+                display_order: 0,
+            });
             setEditingCertificate(null);
             setIsAddingNewCertificate(false);
             setCertificateImageFile(null);
@@ -1295,13 +1343,13 @@ const Admin = () => {
                                                                         {profile?.avatar_url && (
                                                                             <div>
                                                                                 <p className="text-xs text-muted-foreground mb-1">Current Avatar:</p>
-                                                                                <Image src={profile.avatar_url} alt="Current Avatar" width={24} height={24} className="w-24 h-24 rounded-full object-cover border-2 border-border" />
+                                                                                <Image src={profile.avatar_url} alt="Current Avatar" priority width={24} height={24} className="w-24 h-24 rounded-full object-cover border-2 border-border" />
                                                                             </div>
                                                                         )}
                                                                         {avatarPreview && (
                                                                             <div>
                                                                                 <p className="text-xs text-muted-foreground mb-1">New Avatar:</p>
-                                                                                <Image src={avatarPreview} alt="New Avatar Preview" width={24} height={24} className="w-24 h-24 rounded-full object-cover border-2 border-primary" />
+                                                                                <Image src={avatarPreview} alt="New Avatar Preview" priority width={24} height={24} className="w-24 h-24 rounded-full object-cover border-2 border-primary" />
                                                                             </div>
                                                                         )}
                                                                     </div>
@@ -1440,9 +1488,7 @@ const Admin = () => {
                             <Button
                                 onClick={() => {
                                     setIsAddingNewSocialLink(true);
-                                    setTimeout(() => {
-                                        socialLinkFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                    }, 100);
+                                    onScrollToSocialLinks();
                                 }}
                                 className="gradient-primary"
                             >

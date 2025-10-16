@@ -3,7 +3,7 @@ export interface SocialLink {
     about_me_id?: string;
     platform: string;
     url: string;
-    icon?: string;
+    icon?: string | null;
     display_order?: number;
     created_at?: string;
     updated_at?: string;
