@@ -14,7 +14,7 @@ interface CertificateModalProps {
     onClose: () => void;
 }
 
-export const CertificateModal = ({ certificate, isOpen, onClose }: CertificateModalProps) => {
+const CertificateModal = ({ certificate, isOpen, onClose }: CertificateModalProps) => {
     const [imageLoading, setImageLoading] = useState(true);
     const [imageError, setImageError] = useState(false);
 
@@ -127,3 +127,5 @@ export const CertificateModal = ({ certificate, isOpen, onClose }: CertificateMo
         </Dialog>
     );
 };
+
+export default CertificateModal

@@ -41,6 +41,11 @@ export const deleteSkillById = async (id: string): Promise<ApiResponse<null>> =>
     return response.data;
 }
 
+export const updateSkillDisplayOrder = async (request: Skills): Promise<ApiResponse<null>> => {
+    const response = await axios.post<ApiResponse<null>>("/updateSkillDisplayOrder", request);
+    return response.data;
+}
+
 export const updateProfile = async (request: Profile): Promise<ApiResponse<null>> => {
     const response = await axios.post<ApiResponse<null>>("/updateProfile", request);
     return response.data;
@@ -70,6 +75,11 @@ export const deleteProjectById = async (id: string): Promise<ApiResponse<null>> 
     return response.data;
 }
 
+export const updateProjectDisplayOrder = async (request: Projects): Promise<ApiResponse<null>> => {
+    const response = await axios.post<ApiResponse<null>>("/updateProjectDisplayOrder", request);
+    return response.data;
+}
+
 export const addCertificate = async (request: Certificate): Promise<ApiResponse<null>> => {
     const response = await axios.post<ApiResponse<null>>("/addCertificate", request);
     return response.data;
@@ -82,5 +92,10 @@ export const updateCertificateById = async (request: Certificate): Promise<ApiRe
 
 export const deleteCertificateById = async (id: string): Promise<ApiResponse<null>> => {
     const response = await axios.post<ApiResponse<null>>("/deleteCertificateById", { id });
+    return response.data;
+}
+
+export const updateCertificateDisplayOrder = async (request: Certificates): Promise<ApiResponse<null>> => {
+    const response = await axios.post<ApiResponse<null>>("/updateCertificateDisplayOrder", request);
     return response.data;
 }

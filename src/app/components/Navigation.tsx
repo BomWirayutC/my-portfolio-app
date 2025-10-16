@@ -5,7 +5,7 @@ import Link from "next/link";
 const Navigation = ({ isDisplayProjectNav, isDisplayCertificateNav }: { isDisplayProjectNav: boolean, isDisplayCertificateNav: boolean }) => {
     const navItems = [
         { name: "Home", path: "/", display: true },
-        { name: "About", path: "#profile", display: true },
+        { name: "About me", path: "#profile", display: true },
         { name: "Projects", path: "#projects", display: isDisplayProjectNav },
         { name: "Certificates", path: "#certificates", display: isDisplayCertificateNav },
     ];

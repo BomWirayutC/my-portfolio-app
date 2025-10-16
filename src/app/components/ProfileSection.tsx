@@ -1,26 +1,19 @@
 import React from "react";
-import Profile from "../services/models/profile"
 import Image from "next/image";
+import Link from "next/link";
 import { Skeleton } from "./ui/skeleton";
-import { Skills } from "@/app/services/models/skills";
-import { Mail, Code, Palette, Database, Smartphone } from "lucide-react";
+import { Profile, SocialLinks, Skills } from "@/app/services/models";
+import { ExternalLink, Mail } from "lucide-react";
 import { Progress } from "./ui/progress";
+import { getSkillIcon } from "../utils/skillIcons";
+import { Button } from "./ui/button";
+import { getSocialIcon } from "../utils/socialIcons";
 
-const profileDataSection = ({
-    isLoading, profileData, skills
+const ProfileSection = ({
+    isLoading, profileData, skills, socialLinks,
 }: {
-    isLoading: boolean, profileData: Profile | null, skills: Skills
+    isLoading: boolean, profileData: Profile | null, skills: Skills, socialLinks: SocialLinks,
 }) => {
-    const getSkillIcon = (iconName?: string) => {
-        switch (iconName) {
-            case 'Code': return Code;
-            case 'Database': return Database;
-            case 'Palette': return Palette;
-            case 'Smartphone': return Smartphone;
-            default: return Code;
-        }
-    };
-
     return (
         <div className="container mx-auto">
             <div className="text-center mb-16">
@@ -36,7 +29,7 @@ const profileDataSection = ({
                     </p>
                 )}
             </div>
-            <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="grid md:grid-cols-2 gap-12 items-center mb-14">
                 <div className="space-y-6 ">
                     {profileData?.avatar_url && (
                         <div className="flex justify-center mb-6">
@@ -54,9 +47,9 @@ const profileDataSection = ({
                         {profileData?.email && (
                             <p className="flex justify-center items-center gap-2 text-lg">
                                 <Mail className="w-5 h-5 text-primary" />
-                                <a href={`mailto:${profileData.email}`} className="hover:text-primary transition-colors">
+                                <Link href={`mailto:${profileData.email}`} className="hover:text-primary transition-colors">
                                     {profileData.email}
-                                </a>
+                                </Link>
                             </p>
                         )}
                         {profileData?.phone && (
@@ -99,8 +92,36 @@ const profileDataSection = ({
                     )}
                 </div>
             </div>
+            <div className="space-y-4 flex flex-row justify-center items-center">
+                {
+                    socialLinks.length > 0 && (
+                        <div className="flex gap-4 flex-wrap justify-center items-center">
+                            {
+                                socialLinks.map((link) => {
+                                    const SocialIcon = getSocialIcon(link.icon);
+                                    return (
+                                        <Button
+                                            key={link.id}
+                                            variant="outline"
+                                            size="lg"
+                                            asChild
+                                            className="flex items-center gap-2"
+                                        >
+                                            <Link href={link.url} target="_blank" rel="noopener noreferrer">
+                                                <SocialIcon className="w-5 h-5" />
+                                                {link.platform}
+                                                <ExternalLink className="w-4 h-4 ml-1" />
+                                            </Link>
+                                        </Button>
+                                    );
+                                })
+                            }
+                        </div>
+                    )
+                }
+            </div>
         </div>
     )
 }
 
-export default profileDataSection;
+export default ProfileSection;

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Certificate, Certificates } from "../services/models/certificates";
-import { CertificateModal } from "./CertificateModal";
+import { CertificateModal } from "./";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import Image from "next/image";
 import { Award } from "lucide-react";

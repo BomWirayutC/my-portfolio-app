@@ -31,4 +31,20 @@ axios.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
+export function handleAxiosError(error: unknown) {
+    if (Axios.isAxiosError(error)) {
+        const message =
+            error.response?.data?.message ||
+            error.response?.data ||
+            error.message ||
+            "Unknown Axios error";
+
+        // console.error("[AxiosError]", message);
+        return { status: error.response?.status, message };
+    } else {
+        // console.error("[UnexpectedError]", error);
+        return { status: 500, message: "Unexpected error" };
+    }
+}
+
 export default axios;

@@ -1,24 +1,22 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader } from "./components/ui/card";
-import { Skeleton } from "./components/ui/skeleton";
-import Navigation from "./components/Navigation";
-import ProjectCard from "./components/ProjectCard";
 import { getCertificates, getProjects, getProfile, getSkills } from "./services/api";
-import Profile from "./services/models/profile";
-import { Skills } from "./services/models/skills";
-import { Certificates } from "./services/models/certificates";
-import { Projects } from "./services/models/projects";
-import CertificateSection from "./components/CertificateSection";
-import MainCoverSection from "./components/MainCoverSection";
-import ProfileSection from "./components/ProfileSection";
-import ProjectSection from "./components/ProjectSection";
-import LoadingOverlay from "./components/LoadingOverlay";
+import { Profile, SocialLinks, Skills, Certificates, Projects } from "./services/models";
+import {
+    MainCoverSection,
+    CertificateSection,
+    Navigation,
+    ProfileSection,
+    ProjectSection,
+    LoadingOverlay,
+} from "./components";
+import { supabase } from "./services/supabase/client";
 
 const Portfolio = () => {
     const [projects, setProjects] = useState<Projects>([]);
     const [profile, setProfile] = useState<Profile | null>(null);
+    const [socialLinks, setSocialLinks] = useState<SocialLinks>([]);
     const [skills, setSkills] = useState<Skills>([]);
     const [certificates, setCertificates] = useState<Certificates>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -30,7 +28,8 @@ const Portfolio = () => {
     const fetchData = async () => {
         await Promise.all([
             fetchProjects(),
-            fetchprofile(),
+            fetchProfile(),
+            fetchSocialLinks(),
             fetchSkills(),
             fetchCertificates(),
         ]).then(() => setIsLoading(false));
@@ -48,7 +47,7 @@ const Portfolio = () => {
         }
     };
 
-    const fetchprofile = async () => {
+    const fetchProfile = async () => {
         try {
             await getProfile().then((res) => {
                 if (res.status === 200) {
@@ -57,6 +56,20 @@ const Portfolio = () => {
             });
         } catch (error) {
             console.error('Error fetching about me:', error);
+        }
+    };
+
+    const fetchSocialLinks = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('social_links')
+                .select('*')
+                .order('display_order', { ascending: true });
+
+            if (error) throw error;
+            setSocialLinks(data || []);
+        } catch (error) {
+            console.error('Error fetching social links:', error);
         }
     };
 
@@ -95,8 +108,8 @@ const Portfolio = () => {
             </section>
 
             {/* About Section */}
-            <section id="about" className="py-24 px-6">
-                <ProfileSection isLoading={isLoading} profileData={profile} skills={skills} />
+            <section id="profile" className="py-24 px-6">
+                <ProfileSection isLoading={isLoading} profileData={profile} socialLinks={socialLinks} skills={skills} />
             </section>
 
             {/* Projects Section */}
