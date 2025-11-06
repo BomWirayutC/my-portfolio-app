@@ -9,7 +9,7 @@ import { Input } from "../components/ui/input";
 import { TextArea } from "../components/ui/textArea";
 import { Plus, Edit2, Save } from "lucide-react";
 import { useToast } from "../utils/hooks/useToast";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../components/ui/form";
 import { supabase } from "../services/supabase/client";
 import { Profile, Project, Projects, Skill, Skills, Certificate, Certificates, SocialLink, SocialLinks, FileResult } from "../services/models";
@@ -81,6 +81,7 @@ const Admin = () => {
     const [coverPreview, setCoverPreview] = useState<string | null>(null);
     const [projectImagePreview, setProjectImagePreview] = useState<string | null>(null);
     const [certificateImagePreview, setCertificateImagePreview] = useState<string | null>(null);
+    const [certificatePdfPreview, setCertificatePdfPreview] = useState<string | null>(null);
 
     // Refs for scrolling
     const profileRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
@@ -950,6 +951,7 @@ const Admin = () => {
         // Clean up preview URL
         if (certificateImagePreview) URL.revokeObjectURL(certificateImagePreview);
         setCertificateImagePreview(null);
+        setCertificatePdfPreview(null);
         onScrollToCertificate();
     };
 
@@ -1027,6 +1029,7 @@ const Admin = () => {
             // Clean up preview URL
             if (certificateImagePreview) URL.revokeObjectURL(certificateImagePreview);
             setCertificateImagePreview(null);
+            setCertificatePdfPreview(null);
             fetchCertificates();
         } catch (error) {
             const err = handleAxiosError(error);
@@ -1175,10 +1178,14 @@ const Admin = () => {
 
         setCertificateImageFile(file);
 
-        // Create preview URL (only for images)
+        setCertificateImagePreview(null);
+        setCertificatePdfPreview(null);
+
+        const previewFile = URL.createObjectURL(file);
         if (file.type.startsWith('image/')) {
-            const previewUrl = URL.createObjectURL(file);
-            setCertificateImagePreview(previewUrl);
+            setCertificateImagePreview(previewFile);
+        } else {
+            setCertificatePdfPreview(previewFile);
         }
     };
 
@@ -1236,10 +1243,10 @@ const Admin = () => {
                                 <CardContent>
                                     <p className="mb-1"><strong>Bio:</strong> {profile.bio}</p>
                                     {profile.avatar_url && (
-                                        <Image src={profile.avatar_url} width={24} height={24} alt="Avatar" className="w-24 h-24 rounded-full object-cover mb-2" />
+                                        <Image unoptimized src={profile.avatar_url} width={24} height={24} alt="Avatar" className="w-24 h-24 rounded-full object-cover mb-2" />
                                     )}
                                     {profile.cover_image && (
-                                        <Image src={profile.cover_image} width={1000} height={48} alt="Cover" priority className="w-full h-48 rounded mb-2 object-cover" />
+                                        <Image unoptimized src={profile.cover_image} width={1000} height={48} alt="Cover" priority className="w-full h-48 rounded mb-2 object-cover" />
                                     )}
                                     <p className="mb-1"><strong>Location:</strong> {profile.location}</p>
                                     <p className="mb-1"><strong>Email:</strong> {profile.email}</p>
@@ -2022,6 +2029,12 @@ const Admin = () => {
                                                                         <div>
                                                                             <p className="text-xs text-muted-foreground mb-1">New Image:</p>
                                                                             <Image src={certificateImagePreview} width={1000} height={48} alt="New Certificate Preview" className="w-full max-w-md h-48 object-cover rounded border-2 border-primary" />
+                                                                        </div>
+                                                                    )}
+                                                                    {certificatePdfPreview && (
+                                                                        <div>
+                                                                            <p className="text-xs text-muted-foreground mb-1">New PDF:</p>
+                                                                            <embed src={certificatePdfPreview} width={1000} height={48} className="w-full max-w-md h-48 object-cover rounded border-2 border-primary" />
                                                                         </div>
                                                                     )}
                                                                 </div>
