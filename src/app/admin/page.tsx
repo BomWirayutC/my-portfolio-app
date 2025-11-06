@@ -1002,6 +1002,7 @@ const Admin = () => {
                     issue_date: data.issue_date || null,
                     description: data.description || null,
                     display_order: data.display_order || 0,
+                    certificate_image_preview: data.certificate_image_preview || null,
                 }).then((res) => {
                     if (res.status == 200) {
                         toast({
