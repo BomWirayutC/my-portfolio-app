@@ -13,6 +13,7 @@ export interface CertificateForm {
     issue_date?: string;
     description?: string;
     display_order?: number;
+    certificate_image_preview?: string;
 }
 
 export interface ProjectForm {

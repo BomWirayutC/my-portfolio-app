@@ -9,6 +9,7 @@ export interface Certificate {
     issuer: string
     title: string
     updated_at?: string
+    certificate_image_preview?: string | null;
 }
 
 export type Certificates = Certificate[];

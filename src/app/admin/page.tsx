@@ -12,7 +12,7 @@ import { useToast } from "../utils/hooks/useToast";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../components/ui/form";
 import { supabase } from "../services/supabase/client";
-import { Profile, Project, Projects, Skill, Skills, Certificate, Certificates, SocialLink, SocialLinks } from "../services/models";
+import { Profile, Project, Projects, Skill, Skills, Certificate, Certificates, SocialLink, SocialLinks, FileResult } from "../services/models";
 import {
     addCertificate,
     addProject,
@@ -47,7 +47,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { getSkillIcon, SkillTypeList } from "../utils/skillIcons";
 import { SortableCertificateItem, SortableProjectItem, SortableSkillItem, SortableSocialLinkItem } from "./sortable-item";
 import { CertificateForm, ProfileForm, ProjectForm, SkillForm, SocialLinkForm } from "./form-interface";
-import { isOnVercelEnv } from "../utils/utils";
+import { isOnVercelEnv, isPdf } from "../utils/utils";
 import { handleAxiosError } from "../services/axios";
 import { getSocialIcon, socialPlatforms } from "../utils/socialIcons";
 
@@ -342,7 +342,7 @@ const Admin = () => {
             if (avatarFile) {
                 const avatarUrl = await uploadImage(avatarFile, 'avatars');
                 if (avatarUrl) {
-                    data.avatar_url = avatarUrl;
+                    data.avatar_url = avatarUrl.fileUrl || "";
                 } else {
                     throw new Error("Avatar upload failed");
                 }
@@ -352,7 +352,7 @@ const Admin = () => {
             if (coverFile) {
                 const coverUrl = await uploadImage(coverFile, 'covers');
                 if (coverUrl) {
-                    data.cover_image = coverUrl;
+                    data.cover_image = coverUrl.fileUrl || "";
                 } else {
                     throw new Error("Cover upload failed");
                 }
@@ -569,7 +569,7 @@ const Admin = () => {
             if (projectImageFile) {
                 const imageUrl = await uploadImage(projectImageFile, 'projects');
                 if (imageUrl) {
-                    data.image = imageUrl;
+                    data.image = imageUrl.fileUrl || "";
                 } else {
                     throw new Error("Project image upload failed");
                 }
@@ -960,7 +960,8 @@ const Admin = () => {
             if (certificateImageFile) {
                 const imageUrl = await uploadImage(certificateImageFile, 'projects');
                 if (imageUrl) {
-                    data.image = imageUrl;
+                    data.image = imageUrl.fileUrl || "";
+                    data.certificate_image_preview = imageUrl.filePreview || "";
                 } else {
                     throw new Error("Certificate image upload failed");
                 }
@@ -977,6 +978,8 @@ const Admin = () => {
                     issue_date: data.issue_date || null,
                     description: data.description || null,
                     display_order: data.display_order || 0,
+                    certificate_image_preview: data.certificate_image_preview || null,
+
                 }).then((res) => {
                     if (res.status == 200) {
                         toast({
@@ -1093,7 +1096,7 @@ const Admin = () => {
         }
     };
 
-    const uploadImage = async (file: File, bucket: string, fileName?: string): Promise<string | null> => {
+    const uploadImage = async (file: File, bucket: string, fileName?: string): Promise<FileResult | null> => {
         try {
             const fileExt = file.name.split('.').pop();
             const uniqueFileName = fileName || `${Date.now()}.${fileExt}`;
@@ -1103,14 +1106,13 @@ const Admin = () => {
             formData.append('bucket', bucket);
             formData.append('fileName', uniqueFileName);
 
-            let fileUrlResult = "";
             const res = await uploadFile(formData);
             if (res.status === 200) {
-                fileUrlResult = res.data.fileUrl || "";
+                return res.data;
             } else {
                 throw new Error(res.message);
             }
-            return fileUrlResult;
+            return null;
         } catch (error) {
             console.error('Upload error:', error);
             const err = handleAxiosError(error);
@@ -2013,7 +2015,7 @@ const Admin = () => {
                                                                     {editingCertificate?.image && (
                                                                         <div>
                                                                             <p className="text-xs text-muted-foreground mb-1">Current Image:</p>
-                                                                            <Image src={editingCertificate.image} width={1000} height={48} alt="Current Certificate" className="w-full max-w-md h-48 object-cover rounded border-2 border-border" />
+                                                                            <Image src={isPdf(editingCertificate.image) ? editingCertificate.certificate_image_preview || "" : editingCertificate.image} width={1000} height={48} alt="Current Certificate" className="w-full max-w-md h-48 object-cover rounded border-2 border-border" />
                                                                         </div>
                                                                     )}
                                                                     {certificateImagePreview && (

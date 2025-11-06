@@ -8,3 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export const isOnVercelEnv = (): boolean => {
     return typeof window !== "undefined" && window.location.hostname.endsWith("vercel.app");
 }
+
+export const isPdf = (url: string): boolean => {
+    return url.toLowerCase().endsWith('.pdf');
+}

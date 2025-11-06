@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 import Image from "next/image";
 import { Award } from "lucide-react";
 import { Badge } from "./ui/badge";
+import { isPdf } from "../utils/utils";
 
 const CertificateSection = ({ certificates }: { certificates: Certificates }) => {
     const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
@@ -48,7 +49,7 @@ const CertificateSection = ({ certificates }: { certificates: Certificates }) =>
                                         {certificate.image && (
                                             <div className="relative overflow-hidden rounded-lg aspect-video">
                                                 <Image
-                                                    src={certificate.image}
+                                                    src={isPdf(certificate.image) ? certificate.certificate_image_preview || "" : certificate.image}
                                                     alt={`${certificate.title} certificate`}
                                                     width={400}
                                                     height={225}
