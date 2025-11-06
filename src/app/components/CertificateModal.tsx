@@ -52,11 +52,13 @@ const CertificateModal = ({ certificate, isOpen, onClose }: CertificateModalProp
                             <div className="relative">
                                 {
                                     isPdf(certificate.image) ? (
-                                        <div className="w-full h-96 rounded-lg shadow-lg">
+                                        <div className="w-full h-200 rounded-lg shadow-lg">
                                             <embed
                                                 src={certificate.image}
                                                 type="application/pdf"
                                                 className="w-full h-full rounded-lg"
+                                                width={400}
+                                                height={200}
                                             />
                                         </div>
                                     ) : (

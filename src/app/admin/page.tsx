@@ -9,7 +9,7 @@ import { Input } from "../components/ui/input";
 import { TextArea } from "../components/ui/textArea";
 import { Plus, Edit2, Save } from "lucide-react";
 import { useToast } from "../utils/hooks/useToast";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../components/ui/form";
 import { supabase } from "../services/supabase/client";
 import { Profile, Project, Projects, Skill, Skills, Certificate, Certificates, SocialLink, SocialLinks, FileResult } from "../services/models";
