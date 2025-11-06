@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface ProjectCardProps {
     title: string;
@@ -16,6 +17,10 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = ({ title, description, image, technologies, demoUrl, githubUrl }: ProjectCardProps) => {
+    const onHandleLink = (url: string) => {
+        window.open(url, "_blank");
+    }
+
     return (
         <Card className="group overflow-hidden shadow-card hover:shadow-elegant transition-spring hover:-translate-y-2">
             <div className="aspect-video overflow-hidden">
@@ -42,11 +47,11 @@ const ProjectCard = ({ title, description, image, technologies, demoUrl, githubU
                     ))}
                 </div>
                 <div className="flex gap-2">
-                    <Button size="sm" className="gradient-primary" disabled={!demoUrl}>
+                    <Button size="sm" className="gradient-primary" onClick={() => onHandleLink(demoUrl || "")} disabled={!demoUrl}>
                         <ExternalLink className="w-4 h-4 mr-2" />
                         Demo
                     </Button>
-                    <Button size="sm" variant="outline" disabled={!githubUrl}>
+                    <Button size="sm" variant="outline" onClick={() => onHandleLink(githubUrl || "")} disabled={!githubUrl}>
                         <Github className="w-4 h-4 mr-2" />
                         Code
                     </Button>
